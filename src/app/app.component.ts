@@ -1,5 +1,6 @@
-import { Component, inject, OnDestroy } from '@angular/core';
-import { map, of, Subscription, switchMap } from 'rxjs';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { catchError, EMPTY, map, of, Subject, switchMap } from 'rxjs';
 import { SearchBarComponent } from './components/search-bar/search-bar.component';
 import { UserDetailsComponent } from './components/user-details/user-details.component';
 import { UserPostsComponent } from './components/user-posts/user-posts.component';
@@ -14,58 +15,63 @@ import { PostService } from './services/post.service';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent implements OnDestroy {
+export class AppComponent implements OnInit {
   private readonly userService = inject(UserService);
   private readonly postService = inject(PostService);
-  private searchSubscription: Subscription | undefined;
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly username$ = new Subject<string>();
 
   user: User | undefined;
   posts: Post[] = [];
   isLoading = false;
   message = '';
 
-  onSearch(username: string): void {
-    this.searchSubscription?.unsubscribe();
-    this.user = undefined;
-    this.posts = [];
-    this.isLoading = false;
-    this.message = '';
+  ngOnInit(): void {
+    const result$ = this.username$.pipe(
+      switchMap(username => {
+        this.user = undefined;
+        this.posts = [];
+        this.isLoading = false;
+        this.message = '';
 
-    const value = username.trim();
-    if (!value) {
-      this.message = 'Escribe un nombre de usuario.';
-      return;
-    }
-
-    this.isLoading = true;
-    const result$ = this.userService.getByUsername(value).pipe(
-      map(response => response.users[0]),
-      switchMap(user => {
-        if (!user) {
-          return of({ user: undefined, posts: [] });
+        if (!username) {
+          this.message = 'Escribe un nombre de usuario.';
+          return EMPTY;
         }
 
-        return this.postService.getByUserId(user.id).pipe(
-          map(response => ({ user, posts: response.posts }))
+        this.isLoading = true;
+        return this.userService.getByUsername(username).pipe(
+          map(response => response.users[0]),
+          switchMap(user => {
+            if (!user) {
+              return of({ user: undefined, posts: [] });
+            }
+
+            return this.postService.getByUserId(user.id).pipe(
+              map(response => ({ user, posts: response.posts }))
+            );
+          }),
+          catchError(() => {
+            this.isLoading = false;
+            this.message = 'No se pudo completar la búsqueda. Inténtalo de nuevo.';
+            return EMPTY;
+          })
         );
-      })
+      }),
+      takeUntilDestroyed(this.destroyRef)
     );
 
-    this.searchSubscription = result$.subscribe({
+    result$.subscribe({
       next: result => {
         this.user = result.user;
         this.posts = result.posts;
         this.isLoading = false;
         this.message = result.user ? '' : 'Usuario no encontrado.';
-      },
-      error: () => {
-        this.isLoading = false;
-        this.message = 'No se pudo completar la búsqueda. Inténtalo de nuevo.';
       }
     });
   }
 
-  ngOnDestroy(): void {
-    this.searchSubscription?.unsubscribe();
+  onSearch(username: string): void {
+    this.username$.next(username.trim());
   }
 }
