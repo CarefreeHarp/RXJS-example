@@ -56,8 +56,13 @@ Las relaciones se obtienen con consultas separadas: buscar el usuario, consultar
 - `src/app/components/user-details/`: datos del usuario.
 - `src/app/components/user-posts/`: posts y comentarios.
 - `src/app/models/`: interfaces de las tres entidades.
+- `src/app/services/`: `UserService.getByUsername(username)` consulta `/users/filter` con `key=username` y devuelve `Observable<{ users: User[] }>`. El usuario se obtiene de `respuesta.users[0]`, que puede no existir si no hay coincidencias. `PostService.getById(id)` consulta `/posts/{id}` y devuelve `Observable<Post>`. `PostService.getByUserId(userId)` consulta `/posts/user/{userId}` sin parámetros adicionales y devuelve `Observable<{ posts: Post[] }>`. Las peticiones se ejecutan al suscribirse.
 
-Los componentes tienen clases sin lógica y archivos HTML/SCSS vacíos. La plantilla raíz también está vacía. Las consultas, los `@Input`, Bootstrap y los iconos quedan para implementar durante el taller.
+La barra de búsqueda usa HTML básico, sin estilos, y emite el username mediante `@Output() search`. `AppComponent` realiza las consultas y, cuando ambas están listas, envía `user` a `UserDetailsComponent` y `posts` a `UserPostsComponent` mediante `@Input`. Una búsqueda nueva cancela la anterior y limpia sus resultados. Los mensajes de carga, usuario no encontrado y error se muestran en el componente principal.
+
+Los HTML y SCSS de los componentes de usuario y posts están vacíos. Su única preparación es el contrato de entrada: `user: User | undefined` y `posts: Post[]`. Tu compañero puede usar esos campos directamente en sus plantillas para mostrar los resultados. `HttpClient` está configurado en `app.config.ts` y `index.html` contiene el punto de montaje de Angular.
+
+Las consultas de comentarios y la presentación de datos quedan pendientes. No se han añadido estilos, Bootstrap ni iconos.
 
 Según el enunciado, el componente principal realizará las consultas y pasará los datos a los componentes hijos. Si el filtro no encuentra un usuario, la aplicación deberá informar que no existe y ocultar los datos y posts.
 

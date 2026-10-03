@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Post } from '../../models/post';
 
 @Component({
   selector: 'app-user-posts',
@@ -7,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './user-posts.component.scss'
 })
 export class UserPostsComponent {
-
+  @Input({ required: true }) posts: Post[] = [];
 }

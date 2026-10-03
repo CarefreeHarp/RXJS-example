@@ -1,0 +1,14 @@
+<app-search-bar (search)="onSearch($event)"></app-search-bar>
+
+@if (isLoading) {
+  <p role="status">Buscando...</p>
+}
+
+@if (message) {
+  <p role="status">{{ message }}</p>
+}
+
+@if (user) {
+  <app-user-details [user]="user"></app-user-details>
+  <app-user-posts [posts]="posts"></app-user-posts>
+}
