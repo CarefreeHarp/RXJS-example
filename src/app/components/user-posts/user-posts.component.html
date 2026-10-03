@@ -1,0 +1,34 @@
+<section aria-labelledby="user-posts-title">
+  <h2 id="user-posts-title">Posts del usuario ({{ posts.length }})</h2>
+
+  @for (post of posts; track post.id) {
+    @let postComments = commentsOf(post.id);
+    <article>
+      <h3>{{ post.title }}</h3>
+      <p>{{ post.body }}</p>
+
+      <dl>
+        <dt>Etiquetas</dt>
+        <dd>{{ post.tags.join(', ') }}</dd>
+        <dt>Reacciones</dt>
+        <dd>{{ post.reactions.likes }} me gusta · {{ post.reactions.dislikes }} no me gusta</dd>
+        <dt>Vistas</dt>
+        <dd>{{ post.views }}</dd>
+      </dl>
+
+      <h4>Comentarios ({{ postComments.length }})</h4>
+      @for (comment of postComments; track comment.id) {
+        <article>
+          <p><strong>{{ comment.user.fullName }}</strong> (&#64;{{ comment.user.username }})</p>
+          <p>{{ comment.body }}</p>
+          <p>{{ comment.likes }} me gusta</p>
+        </article>
+      } @empty {
+        <p>Este post no tiene comentarios.</p>
+      }
+    </article>
+    <hr>
+  } @empty {
+    <p>Este usuario no ha publicado posts.</p>
+  }
+</section>

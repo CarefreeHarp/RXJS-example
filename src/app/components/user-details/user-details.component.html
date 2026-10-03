@@ -1,0 +1,121 @@
+@if (user) {
+  <section aria-labelledby="user-details-title">
+    <h2 id="user-details-title">Datos del usuario</h2>
+
+    <img [src]="user.image" [alt]="'Foto de ' + user.firstName + ' ' + user.lastName" width="128" height="128">
+    <h3>{{ user.firstName }} {{ user.lastName }}</h3>
+    <p>&#64;{{ user.username }} · {{ user.role }}</p>
+
+    <h4>Información personal</h4>
+    <dl>
+      <dt>Nombre</dt>
+      <dd>{{ user.firstName }}</dd>
+      <dt>Apellido</dt>
+      <dd>{{ user.lastName }}</dd>
+      <dt>Apellido de soltera</dt>
+      <dd>{{ user.maidenName || 'No registrado' }}</dd>
+      <dt>Edad</dt>
+      <dd>{{ user.age }} años</dd>
+      <dt>Género</dt>
+      <dd>{{ user.gender }}</dd>
+      <dt>Fecha de nacimiento</dt>
+      <dd>{{ user.birthDate }}</dd>
+      <dt>Universidad</dt>
+      <dd>{{ user.university }}</dd>
+    </dl>
+
+    <h4>Contacto</h4>
+    <dl>
+      <dt>Correo</dt>
+      <dd>{{ user.email }}</dd>
+      <dt>Teléfono</dt>
+      <dd>{{ user.phone }}</dd>
+    </dl>
+
+    <h4>Características físicas</h4>
+    <dl>
+      <dt>Tipo de sangre</dt>
+      <dd>{{ user.bloodGroup }}</dd>
+      <dt>Estatura</dt>
+      <dd>{{ user.height }} cm</dd>
+      <dt>Peso</dt>
+      <dd>{{ user.weight }} kg</dd>
+      <dt>Color de ojos</dt>
+      <dd>{{ user.eyeColor }}</dd>
+      <dt>Cabello</dt>
+      <dd>{{ user.hair.color }}, {{ user.hair.type }}</dd>
+    </dl>
+
+    <h4>Dirección</h4>
+    <dl>
+      <dt>Dirección</dt>
+      <dd>{{ user.address.address }}</dd>
+      <dt>Ciudad</dt>
+      <dd>{{ user.address.city }}</dd>
+      <dt>Estado</dt>
+      <dd>{{ user.address.state }} ({{ user.address.stateCode }})</dd>
+      <dt>Código postal</dt>
+      <dd>{{ user.address.postalCode }}</dd>
+      <dt>País</dt>
+      <dd>{{ user.address.country }}</dd>
+      <dt>Coordenadas</dt>
+      <dd>{{ user.address.coordinates.lat }}, {{ user.address.coordinates.lng }}</dd>
+    </dl>
+
+    <h4>Empresa</h4>
+    <dl>
+      <dt>Nombre</dt>
+      <dd>{{ user.company.name }}</dd>
+      <dt>Cargo</dt>
+      <dd>{{ user.company.title }}</dd>
+      <dt>Departamento</dt>
+      <dd>{{ user.company.department }}</dd>
+      <dt>Dirección</dt>
+      <dd>
+        {{ user.company.address.address }}, {{ user.company.address.city }},
+        {{ user.company.address.state }} ({{ user.company.address.stateCode }}) {{ user.company.address.postalCode }},
+        {{ user.company.address.country }}
+      </dd>
+      <dt>EIN</dt>
+      <dd>{{ user.ein }}</dd>
+    </dl>
+
+    <h4>Datos bancarios</h4>
+    <dl>
+      <dt>Tipo de tarjeta</dt>
+      <dd>{{ user.bank.cardType }}</dd>
+      <dt>Número de tarjeta</dt>
+      <dd>{{ user.bank.cardNumber }}</dd>
+      <dt>Vencimiento</dt>
+      <dd>{{ user.bank.cardExpire }}</dd>
+      <dt>Moneda</dt>
+      <dd>{{ user.bank.currency }}</dd>
+      <dt>IBAN</dt>
+      <dd>{{ user.bank.iban }}</dd>
+      <dt>SSN</dt>
+      <dd>{{ user.ssn }}</dd>
+    </dl>
+
+    <h4>Criptomonedas</h4>
+    <dl>
+      <dt>Moneda</dt>
+      <dd>{{ user.crypto.coin }}</dd>
+      <dt>Billetera</dt>
+      <dd>{{ user.crypto.wallet }}</dd>
+      <dt>Red</dt>
+      <dd>{{ user.crypto.network }}</dd>
+    </dl>
+
+    <h4>Datos técnicos</h4>
+    <dl>
+      <dt>ID</dt>
+      <dd>{{ user.id }}</dd>
+      <dt>IP</dt>
+      <dd>{{ user.ip }}</dd>
+      <dt>Dirección MAC</dt>
+      <dd>{{ user.macAddress }}</dd>
+      <dt>Navegador</dt>
+      <dd>{{ user.userAgent }}</dd>
+    </dl>
+  </section>
+}
