@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, EMPTY, map, of, Subject, switchMap } from 'rxjs';
 import { SearchBarComponent } from './components/search-bar/search-bar.component';
@@ -15,7 +15,7 @@ import { PostService } from './services/post.service';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   private readonly userService = inject(UserService);
   private readonly postService = inject(PostService);
   private readonly destroyRef = inject(DestroyRef);
@@ -26,7 +26,7 @@ export class AppComponent implements OnInit {
   isLoading = false;
   message = '';
 
-  ngOnInit(): void {
+  constructor() {
     const result$ = this.username$.pipe(
       switchMap(username => {
         this.user = undefined;
