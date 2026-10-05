@@ -56,13 +56,16 @@ Las relaciones se obtienen con consultas separadas: buscar el usuario, consultar
 - `src/app/components/user-details/`: datos del usuario.
 - `src/app/components/user-posts/`: posts y comentarios.
 - `src/app/models/`: interfaces de las tres entidades.
-- `src/app/services/`: `UserService.getByUsername(username)` consulta `/users/filter` con `key=username` y devuelve `Observable<{ users: User[] }>`. El usuario se obtiene de `respuesta.users[0]`, que puede no existir si no hay coincidencias. `PostService.getById(id)` consulta `/posts/{id}` y devuelve `Observable<Post>`. `PostService.getByUserId(userId)` consulta `/posts/user/{userId}` sin parámetros adicionales y devuelve `Observable<{ posts: Post[] }>`. Las peticiones se ejecutan al suscribirse.
+- `src/app/services/`: `UserService.getByUsername(username)` consulta `/users/filter` con `key=username` y devuelve `Observable<{ users: User[] }>`. El usuario se obtiene de `respuesta.users[0]`, que puede no existir si no hay coincidencias. `PostService.getById(id)` consulta `/posts/{id}` y devuelve `Observable<Post>`. `PostService.getByUserId(userId)` consulta `/posts/user/{userId}` sin parámetros adicionales y devuelve `Observable<{ posts: Post[] }>`. `CommentService.getByPostId(postId)` consulta `/comments/post/{postId}` y devuelve `Observable<{ comments: Comment[] }>`. Las peticiones se ejecutan al suscribirse.
 
 La barra de búsqueda usa HTML básico, sin estilos, y emite el username mediante `@Output() search`. `AppComponent` realiza las consultas y, cuando ambas están listas, envía `user` a `UserDetailsComponent` y `posts` a `UserPostsComponent` mediante `@Input`. En el constructor se conecta un único flujo `username$`: `switchMap` cancela la búsqueda anterior cuando llega otro username y limpia sus resultados. `takeUntilDestroyed` realiza la limpieza al destruir el componente. Los errores se manejan dentro de cada búsqueda para permitir nuevos intentos. Los mensajes de carga, usuario no encontrado y error se muestran en el componente principal.
 
-Los HTML y SCSS de los componentes de usuario y posts están vacíos. Su única preparación es el contrato de entrada: `user: User | undefined` y `posts: Post[]`. Tu compañero puede usar esos campos directamente en sus plantillas para mostrar los resultados. `HttpClient` está configurado en `app.config.ts` y `index.html` contiene el punto de montaje de Angular.
+Después de obtener los posts, `AppComponent` pide los comentarios de cada post con `forkJoin`, dentro del mismo flujo de `switchMap` (sin suscripciones anidadas). Cuando llegan todos, envía `comments: Comment[]` a `UserPostsComponent` junto con `posts`. Si el usuario no tiene posts, no se hace ninguna consulta de comentarios.
 
-Las consultas de comentarios y la presentación de datos quedan pendientes. No se han añadido estilos, Bootstrap ni iconos.
+- `UserDetailsComponent` muestra todos los datos de `User`, agrupados en información personal, contacto, características físicas, dirección, empresa, datos bancarios, criptomonedas y datos técnicos. La contraseña no se muestra.
+- `UserPostsComponent` muestra cada post con su título, cuerpo, etiquetas, reacciones (me gusta y no me gusta) y vistas. Debajo van sus comentarios, con el nombre completo y el username del autor y sus me gusta. `commentsOf(postId)` filtra los comentarios de cada post.
+
+`HttpClient` está configurado en `app.config.ts` y `index.html` contiene el punto de montaje de Angular. Las plantillas usan HTML básico; los estilos, Bootstrap y los iconos quedan para la fase 3.
 
 Según el enunciado, el componente principal realizará las consultas y pasará los datos a los componentes hijos. Si el filtro no encuentra un usuario, la aplicación deberá informar que no existe y ocultar los datos y posts.
 

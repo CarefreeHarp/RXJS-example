@@ -1,0 +1,14 @@
+.post-card {
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.post-card:hover {
+  box-shadow: 0 .75rem 1.5rem rgba(31, 55, 90, .1) !important;
+  transform: translateY(-2px);
+}
+
+.post-metrics span {
+  background-color: var(--post-metric-bg);
+  border-radius: 99rem;
+  padding: .35rem .65rem;
+}

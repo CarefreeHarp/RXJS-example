@@ -1,0 +1,44 @@
+body {
+  background-color: #101923;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4 {
+  color: var(--bs-heading-color);
+}
+
+.card {
+  border-radius: 1rem;
+}
+
+[data-bs-theme='dark'] .bg-light {
+  background-color: #223044 !important;
+}
+
+[data-bs-theme='dark'] h1,
+[data-bs-theme='dark'] h2,
+[data-bs-theme='dark'] h3,
+[data-bs-theme='dark'] h4 {
+  color: #f4f8ff;
+}
+
+[data-bs-theme='dark'] .search-card {
+  background: linear-gradient(135deg, #182738, #1d3045) !important;
+  box-shadow: 0 .75rem 2rem rgba(0, 0, 0, .22) !important;
+}
+
+[data-bs-theme='dark'] .search-card .input-group-text {
+  background-color: #142131;
+  border-color: #40536b;
+  color: #a8c7ff;
+}
+
+[data-bs-theme='dark'] .search-card .form-control {
+  background-color: #142131;
+  border-color: #40536b;
+  color: #f4f8ff;
+}
+
+[data-bs-theme='dark'] .search-card .form-control::placeholder {
+  color: #9baabd;
+}

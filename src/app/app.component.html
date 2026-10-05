@@ -1,14 +1,25 @@
-<app-search-bar (search)="onSearch($event)"></app-search-bar>
+<div class="app-shell" [attr.data-bs-theme]="isDarkMode ? 'dark' : 'light'">
+<main class="container py-4 py-md-5">
+  <header class="hero mx-auto mb-4 position-relative">
+    <button class="btn btn-sm theme-toggle" type="button" (click)="toggleTheme()" [attr.aria-label]="isDarkMode ? 'Activar modo claro' : 'Activar modo oscuro'" [title]="isDarkMode ? 'Modo claro' : 'Modo oscuro'">
+      <i class="bi" [class.bi-sun-fill]="isDarkMode" [class.bi-moon-stars-fill]="!isDarkMode" aria-hidden="true"></i>
+    </button>
+    <h1 class="hero-title">Perfil de usuario</h1>
+  </header>
 
-@if (isLoading) {
-  <p role="status">Buscando...</p>
-}
+  <app-search-bar (search)="onSearch($event)"></app-search-bar>
 
-@if (message) {
-  <p role="status">{{ message }}</p>
-}
+  @if (isLoading) {
+    <p class="text-center text-secondary" role="status"><span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Buscando perfil...</p>
+  }
 
-@if (user) {
-  <app-user-details [user]="user"></app-user-details>
-  <app-user-posts [posts]="posts"></app-user-posts>
-}
+  @if (message) {
+    <p class="alert alert-info" role="status">{{ message }}</p>
+  }
+
+  @if (user) {
+    <app-user-details [user]="user"></app-user-details>
+    <app-user-posts [posts]="posts" [comments]="comments"></app-user-posts>
+  }
+</main>
+</div>
