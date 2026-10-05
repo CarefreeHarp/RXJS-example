@@ -1,34 +1,37 @@
 <section aria-labelledby="user-posts-title">
-  <h2 id="user-posts-title">Posts del usuario ({{ posts.length }})</h2>
+  <h2 id="user-posts-title" class="h4 mb-3"><i class="bi bi-journal-text text-primary me-2" aria-hidden="true"></i>Posts del usuario <span class="badge text-bg-secondary">{{ posts.length }}</span></h2>
 
   @for (post of posts; track post.id) {
     @let postComments = commentsOf(post.id);
-    <article>
-      <h3>{{ post.title }}</h3>
-      <p>{{ post.body }}</p>
+    <article class="card shadow-sm border-0 mb-3 post-card">
+      <div class="card-body p-3 p-md-4">
+      <h3 class="h5 fw-bold">{{ post.title }}</h3>
+      <p class="text-secondary">{{ post.body }}</p>
 
-      <dl>
-        <dt>Etiquetas</dt>
-        <dd>{{ post.tags.join(', ') }}</dd>
-        <dt>Reacciones</dt>
-        <dd>{{ post.reactions.likes }} me gusta · {{ post.reactions.dislikes }} no me gusta</dd>
-        <dt>Vistas</dt>
-        <dd>{{ post.views }}</dd>
-      </dl>
+      <div class="d-flex flex-wrap gap-2 mb-3">
+        @for (tag of post.tags; track tag) {
+          <span class="badge rounded-pill text-bg-light border">{{ tag }}</span>
+        }
+      </div>
+      <div class="d-flex flex-wrap gap-2 small mb-4 post-metrics">
+        <span><i class="bi bi-hand-thumbs-up-fill text-success me-1" aria-hidden="true"></i>{{ post.reactions.likes }}</span>
+        <span><i class="bi bi-hand-thumbs-down-fill text-danger me-1" aria-hidden="true"></i>{{ post.reactions.dislikes }}</span>
+        <span><i class="bi bi-eye-fill text-primary me-1" aria-hidden="true"></i>{{ post.views }} vistas</span>
+      </div>
 
-      <h4>Comentarios ({{ postComments.length }})</h4>
+      <h4 class="h6 border-top pt-3">Comentarios ({{ postComments.length }})</h4>
       @for (comment of postComments; track comment.id) {
-        <article>
-          <p><strong>{{ comment.user.fullName }}</strong> (&#64;{{ comment.user.username }})</p>
-          <p>{{ comment.body }}</p>
-          <p>{{ comment.likes }} me gusta</p>
+        <article class="bg-light rounded p-3 mb-2">
+          <p class="mb-1"><strong>{{ comment.user.fullName }}</strong> <span class="text-secondary">(&#64;{{ comment.user.username }})</span></p>
+          <p class="mb-2">{{ comment.body }}</p>
+          <p class="small text-secondary mb-0"><i class="bi bi-hand-thumbs-up me-1" aria-hidden="true"></i>{{ comment.likes }}</p>
         </article>
       } @empty {
-        <p>Este post no tiene comentarios.</p>
+        <p class="text-secondary mb-0">Este post no tiene comentarios.</p>
       }
+      </div>
     </article>
-    <hr>
   } @empty {
-    <p>Este usuario no ha publicado posts.</p>
+    <p class="alert alert-light border">Este usuario no ha publicado posts.</p>
   }
 </section>

@@ -28,6 +28,7 @@ export class AppComponent {
   posts: Post[] = [];
   comments: Comment[] = [];
   isLoading = false;
+  isDarkMode = false;
   message = '';
 
   constructor() {
@@ -90,5 +91,9 @@ export class AppComponent {
 
   onSearch(username: string): void {
     this.username$.next(username.trim());
+  }
+
+  toggleTheme(): void {
+    this.isDarkMode = !this.isDarkMode;
   }
 }
