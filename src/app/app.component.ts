@@ -1,6 +1,6 @@
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { catchError, EMPTY, forkJoin, map, of, Subject, switchMap } from 'rxjs';
+import { catchError, EMPTY, from, map, mergeMap, of, Subject, switchMap, toArray } from 'rxjs';
 import { SearchBarComponent } from './components/search-bar/search-bar.component';
 import { UserDetailsComponent } from './components/user-details/user-details.component';
 import { UserPostsComponent } from './components/user-posts/user-posts.component';
@@ -56,13 +56,10 @@ export class AppComponent {
             return this.postService.getByUserId(user.id).pipe(
               map(response => response.posts),
               switchMap(posts => {
-                // forkJoin no emite con un arreglo vacío: sin posts no hay comentarios que pedir.
-                if (posts.length === 0) {
-                  return of({ user, posts, comments: [] });
-                }
-
-                // Pide los comentarios de todos los posts a la vez y espera a que lleguen todos.
-                return forkJoin(posts.map(post => this.commentService.getByPostId(post.id))).pipe(
+                // Consulta en paralelo y reúne las respuestas; sin posts, toArray emite [].
+                return from(posts).pipe(
+                  mergeMap(post => this.commentService.getByPostId(post.id)),
+                  toArray(),
                   map(responses => ({ user, posts, comments: responses.flatMap(response => response.comments) }))
                 );
               })
